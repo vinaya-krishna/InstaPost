@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText userName, userNickName, userEmail, userPassword;
-    private Button regButton, signinButton;
+    private Button regButton;
     private ProgressBar loadingBar;
     private FirebaseAuth mAuth;
 
@@ -45,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
         regButton.setOnClickListener( new View.OnClickListener(){
 
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 regButton.setVisibility(View.INVISIBLE);
                 loadingBar.setVisibility(View.VISIBLE);
                 final String name = userName.getText().toString().trim();
@@ -59,7 +59,35 @@ public class RegisterActivity extends AppCompatActivity {
                     loadingBar.setVisibility(View.INVISIBLE);
                 }
                 else{
-                    createUserAccount(name, nickName, email,password);
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if(task.isSuccessful()){
+                                        User user = new User(name, nickName, email);
+                                        FirebaseDatabase.getInstance().getReference("Users")
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    //go to next Screen
+                                                    regButton.setVisibility(View.VISIBLE);
+                                                    loadingBar.setVisibility(View.INVISIBLE);
+
+                                                    Intent selectionIntent = new Intent(v.getContext(), SelectionActivity.class);
+                                                    startActivity(selectionIntent);
+                                                }
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        showMessage("Account Creation Failed "+ task.getException().getMessage());
+                                        regButton.setVisibility(View.VISIBLE);
+                                        loadingBar.setVisibility(View.INVISIBLE);
+                                    }
+                                }
+                            });
                 }
             }
         });
@@ -75,34 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void createUserAccount(final String name, final String nickName, final String email, String password){
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            showMessage("Account Created");
-                            User user = new User(name, nickName, email);
-                            FirebaseDatabase.getInstance().getReference("Users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        //go to next Screen
 
-                                        regButton.setVisibility(View.VISIBLE);
-                                        loadingBar.setVisibility(View.INVISIBLE);
-                                    }
-                                }
-                            });
-                        }
-                        else{
-                            showMessage("Account Creation Failed "+ task.getException().getMessage());
-                            regButton.setVisibility(View.VISIBLE);
-                            loadingBar.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                });
     }
 
     private void showMessage(String message){

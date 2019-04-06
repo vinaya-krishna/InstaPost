@@ -50,7 +50,7 @@ public class SigninActivity extends AppCompatActivity {
         });
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 signInButton.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
 
@@ -65,10 +65,10 @@ public class SigninActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
-
-                                        showMessage("SignIn Success");
                                         signInButton.setVisibility(View.VISIBLE);
                                         progressBar.setVisibility(View.INVISIBLE);
+                                        Intent selectionIntent = new Intent(v.getContext(), SelectionActivity.class);
+                                        startActivity(selectionIntent);
                                     }
                                     else{
                                         showMessage("SignIn Failed "+ task.getException().getMessage());
