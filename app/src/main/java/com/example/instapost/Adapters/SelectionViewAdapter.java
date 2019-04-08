@@ -1,6 +1,7 @@
 package com.example.instapost.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,17 +11,18 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.instapost.Activities.PostfeedActivity;
 import com.example.instapost.R;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
-    private static final String TAG = "RecyclerViewAdapter";
+public class SelectionViewAdapter extends RecyclerView.Adapter<SelectionViewAdapter.ViewHolder>{
+    private static final String TAG = "SelectionViewAdapter";
 
     private ArrayList<String> mTextContents;
     private Context mContext;
 
-    public RecyclerViewAdapter(Context mContext, ArrayList<String> mTextContents) {
+    public SelectionViewAdapter(Context mContext, ArrayList<String> mTextContents) {
         this.mTextContents = mTextContents;
         this.mContext = mContext;
     }
@@ -41,6 +43,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: "+ mTextContents.get(i));
+                Intent postFeed = new Intent(v.getContext(), PostfeedActivity.class);
+                mContext.startActivity(postFeed);
             }
         });
 
