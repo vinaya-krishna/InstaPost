@@ -6,10 +6,34 @@
     android:layout_margin="8dp">
 
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:shape="ring"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:src="@drawable/round_account_circle_black_18dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/post_name"
+                android:layout_margin="8dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
 
         <ImageView
             android:id="@+id/post_image"
@@ -25,8 +49,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="Optional text"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="20sp" />
+
         <TextView
             android:id="@+id/post_hashtag"
             android:layout_width="wrap_content"
@@ -35,7 +60,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="Hashtag"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="20sp" />
 
     </LinearLayout>

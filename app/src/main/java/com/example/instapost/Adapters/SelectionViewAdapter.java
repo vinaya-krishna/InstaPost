@@ -44,6 +44,7 @@ public class SelectionViewAdapter extends RecyclerView.Adapter<SelectionViewAdap
             public void onClick(View v) {
                 Log.d(TAG, "onClick: "+ mTextContents.get(i));
                 Intent postFeed = new Intent(v.getContext(), PostfeedActivity.class);
+                postFeed.putExtra("ItemSelected", mTextContents.get(i));
                 mContext.startActivity(postFeed);
             }
         });

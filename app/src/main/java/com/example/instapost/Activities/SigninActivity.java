@@ -1,6 +1,7 @@
 package com.example.instapost.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -29,6 +30,7 @@ public class SigninActivity extends AppCompatActivity {
     private Button signInButton;
     private FirebaseAuth mAuth;
     private EditText email, password;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,10 @@ public class SigninActivity extends AppCompatActivity {
                                     if(task.isSuccessful()){
                                         signInButton.setVisibility(View.VISIBLE);
                                         progressBar.setVisibility(View.INVISIBLE);
+
                                         Intent selectionIntent = new Intent(v.getContext(), SelectionActivity.class);
+                                        selectionIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        selectionIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(selectionIntent);
                                     }
                                     else{
@@ -86,6 +91,8 @@ public class SigninActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void showMessage(String message){
         Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();

@@ -5,6 +5,7 @@ public class Post {
     private String mImageURl;
     private String mHashTag;
     private String mEmail;
+    private String mName;
 
     public Post(){}
 
@@ -16,7 +17,15 @@ public class Post {
         this.mEmail = mEmail;
     }
 
-    public Post(String mOptionalText, String mImageURl, String mHashTag, String mEmail) {
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
+    public Post(String mOptionalText, String mImageURl, String mHashTag, String mEmail, String mName) {
 
 //        if(mOptionalText.trim().equals(""))
 //            mOptionalText = "";
@@ -24,6 +33,7 @@ public class Post {
         this.mImageURl = mImageURl;
         this.mHashTag = mHashTag;
         this.mEmail = mEmail;
+        this.mName = mName;
     }
 
     public String getmOptionalText() {

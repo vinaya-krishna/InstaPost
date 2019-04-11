@@ -1,9 +1,11 @@
 package com.example.instapost.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +19,7 @@ import com.example.instapost.Adapters.SelectionViewAdapter;
 import com.example.instapost.Models.Post;
 import com.example.instapost.Models.User;
 import com.example.instapost.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SelectionActivity extends AppCompatActivity implements ValueEventListener {
 
@@ -33,10 +38,14 @@ public class SelectionActivity extends AppCompatActivity implements ValueEventLi
     RadioButton userRadiobtn;
     ProgressBar mProgresshBar;
     RecyclerView recyclerView;
+    private FirebaseAuth mAuth;
     private ArrayList<String> mListContents = new ArrayList<>();
     private ArrayList<String> mUsers = new ArrayList<>();
-    private ArrayList<String> mHashTags = new ArrayList<>();
+    private Set<String> mHashTags = new HashSet<>();
     private ArrayList<Post> mPosts = new ArrayList<>();
+    private String currentUserName;
+    private SharedPreferences.Editor sharedPreferences;
+    private User currentUser;
 
 
 
@@ -45,7 +54,6 @@ public class SelectionActivity extends AppCompatActivity implements ValueEventLi
     private DatabaseReference mUsersRef = mRootRef.child("Users");
     private DatabaseReference mPostsRef = mRootRef.child("Posts");
     private SelectionViewAdapter selectionViewAdapter;
-
 
 
 
@@ -81,6 +89,7 @@ public class SelectionActivity extends AppCompatActivity implements ValueEventLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_selection);
         mProgresshBar = findViewById(R.id.progress_bar_list);
         userRadiobtn = findViewById(R.id.radio_user);
@@ -122,6 +131,7 @@ public class SelectionActivity extends AppCompatActivity implements ValueEventLi
         mUsersRef.addValueEventListener(this);
         mPostsRef.addValueEventListener(this);
 
+
         initArrayList();
         initRecyclerView();
     }
@@ -130,6 +140,11 @@ public class SelectionActivity extends AppCompatActivity implements ValueEventLi
         Log.d(TAG, "initRecyclerView: init called");
         recyclerView = findViewById(R.id.recycler_view);
         selectionViewAdapter = new SelectionViewAdapter(this, mListContents);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.recyclerview_divider,null));
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
         recyclerView.setAdapter(selectionViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -156,8 +171,20 @@ public class SelectionActivity extends AppCompatActivity implements ValueEventLi
         if(key == "Users"){
             mUsers.clear();
             for (DataSnapshot child : dataSnapshot.getChildren()) {
-                User user = child.getValue(User.class);
-                mUsers.add(user.name);
+                currentUser = child.getValue(User.class);
+                mUsers.add(currentUser.getNickName());
+
+                System.out.println(currentUser.name);
+                System.out.println(child.getKey());
+                System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                if(child.getKey().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid()) == 0){
+                    System.out.println("+++++++++++++++++++");
+                    System.out.println(currentUser.name);
+                    saveUser();
+
+                }
+
             }
             mListContents.addAll(mUsers);
             selectionViewAdapter.notifyDataSetChanged();
@@ -168,13 +195,31 @@ public class SelectionActivity extends AppCompatActivity implements ValueEventLi
             for (DataSnapshot child : dataSnapshot.getChildren()) {
                 Post post = child.getValue(Post.class);
                 mPosts.add(post);
-                mHashTags.add(post.getmHashTag());
+                String[] allHashTags = post.getmHashTag().split("\\s+");
+                for(String hashTag: allHashTags)
+                    mHashTags.add(hashTag);
             }
         }
+
+//        else if( key == FirebaseAuth.getInstance().getCurrentUser().getUid()){
+//            User user = dataSnapshot.getValue(User.class);
+//            System.out.println(user.name);
+//
+//
+//        }
 
         mProgresshBar.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
 
+    }
+
+    private void saveUser(){
+        sharedPreferences = getSharedPreferences("Login", MODE_PRIVATE).edit();
+        sharedPreferences.putString("name", currentUser.getName());
+        sharedPreferences.putString("nickName", currentUser.getNickName());
+        sharedPreferences.putString("email", currentUser.getEmail());
+//        sharedPreferences.putString("password", FirebaseAuth.getInstance());
+        sharedPreferences.commit();
     }
 
     @Override

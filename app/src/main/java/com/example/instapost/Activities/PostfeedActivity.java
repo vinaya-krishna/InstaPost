@@ -1,5 +1,6 @@
 package com.example.instapost.Activities;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,11 +29,17 @@ public class PostfeedActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private ArrayList<Post> mPosts;
     private ProgressBar mProgressImage;
+    private boolean isName = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_postfeed);
+
+        Intent intent = getIntent();
+        final String selectedItem = intent.getExtras().getString("ItemSelected");
+        if(selectedItem.startsWith("#"))
+            isName = false;
 
         mProgressImage = findViewById(R.id.progress_bar_image);
         mPostsView = findViewById(R.id.recycler_view_posts);
@@ -45,7 +52,16 @@ public class PostfeedActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot thisPost: dataSnapshot.getChildren()){
                     Post post = thisPost.getValue(Post.class);
-                    mPosts.add(post);
+                    if(isName){
+                        if(post.getmName().equals(selectedItem))
+                            mPosts.add(post);
+                    }
+                    else{
+                        if(post.getmHashTag().contains(selectedItem))
+                            mPosts.add(post);
+                    }
+
+
                 }
 
                 mAdapter = new PostfeedAdapter(PostfeedActivity.this, mPosts);

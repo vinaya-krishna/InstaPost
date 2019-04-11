@@ -8,10 +8,12 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:windowSoftInputMode="adjustResize"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.PostfeedActivity"></activity>
+        <activity
+            android:name=".Activities.PostfeedActivity"></activity>
         <activity android:name=".Activities.PostActivity" />
         <activity android:name=".Activities.SelectionActivity" />
         <activity android:name=".Activities.SigninActivity">
@@ -22,6 +24,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.RegisterActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

@@ -41,6 +41,7 @@ public class PostfeedAdapter extends RecyclerView.Adapter<PostfeedAdapter.Postfe
         Post post = mPosts.get(i);
         postfeedHolder.optionalText.setText(post.getmOptionalText());
         postfeedHolder.hashTag.setText(post.getmHashTag());
+        postfeedHolder.userName.setText(post.getmName());
 
         System.out.println("***************************");
         System.out.println(post.getmImageURl());
@@ -60,11 +61,12 @@ public class PostfeedAdapter extends RecyclerView.Adapter<PostfeedAdapter.Postfe
 
     public class PostfeedHolder extends RecyclerView.ViewHolder {
 
-        public TextView optionalText, hashTag;
+        public TextView optionalText, hashTag, userName;
         public ImageView postImage;
 
         public PostfeedHolder(@NonNull View itemView) {
             super(itemView);
+            userName = itemView.findViewById(R.id.post_name);
             optionalText = itemView.findViewById(R.id.post_text);
             hashTag = itemView.findViewById(R.id.post_hashtag);
             postImage = itemView.findViewById(R.id.post_image);
