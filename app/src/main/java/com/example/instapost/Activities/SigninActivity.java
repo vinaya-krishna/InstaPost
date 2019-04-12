@@ -72,7 +72,7 @@ public class SigninActivity extends AppCompatActivity {
                                         signInButton.setVisibility(View.VISIBLE);
                                         progressBar.setVisibility(View.INVISIBLE);
 
-                                        Intent selectionIntent = new Intent(v.getContext(), SelectionActivity.class);
+                                        Intent selectionIntent = new Intent(v.getContext(), HomeActivity.class);
                                         selectionIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         selectionIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(selectionIntent);

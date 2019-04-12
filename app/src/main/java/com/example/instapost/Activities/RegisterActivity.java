@@ -77,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                     regButton.setVisibility(View.VISIBLE);
                                                     loadingBar.setVisibility(View.INVISIBLE);
 
-                                                    Intent selectionIntent = new Intent(v.getContext(), SelectionActivity.class);
+                                                    Intent selectionIntent = new Intent(v.getContext(), HomeActivity.class);
                                                     startActivity(selectionIntent);
                                                 }
                                             }
@@ -104,9 +104,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void createUserAccount(final String name, final String nickName, final String email, String password){
-
-    }
 
 
     private void showMessage(String message){
