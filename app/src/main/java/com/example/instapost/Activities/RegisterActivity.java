@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -50,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(final View v) {
                 regButton.setVisibility(View.INVISIBLE);
                 loadingBar.setVisibility(View.VISIBLE);
+                userPassword.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 final String name = userName.getText().toString().trim();
                 final String nickName = userNickName.getText().toString().trim();
                 final String email = userEmail.getText().toString().trim();
@@ -95,15 +97,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(mAuth.getCurrentUser() != null){
-            //already login
-        }
-    }
-
 
 
     private void showMessage(String message){

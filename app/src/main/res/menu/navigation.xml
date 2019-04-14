@@ -4,16 +4,16 @@
     <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/ic_user"
-        android:title="Users" />
+        android:title="@string/users" />
 
     <item
         android:id="@+id/navigation_hashtag"
         android:icon="@drawable/ic_hashtag"
-        android:title="HashTags" />
+        android:title="@string/hashTags" />
 
     <item
         android:id="@+id/navigation_newpost"
         android:icon="@drawable/ic_newpost"
-        android:title="Create New Post" />
+        android:title="@string/create_new_post" />
 
 </menu>

@@ -1,20 +1,34 @@
 package com.example.instapost.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.instapost.Models.User;
 import com.example.instapost.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference mRootRef = mDatabase.getReference();
+    private DatabaseReference mUsersRef = mRootRef.child("Users");
+    private SharedPreferences.Editor sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +38,33 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
 
+        mUsersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    User currentUser = child.getValue(User.class);
+
+                    if(child.getKey().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid()) == 0){
+                        saveUser(currentUser);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         loadFragment(new UsersFragment());
+    }
+
+    private void saveUser(User currentUser){
+        sharedPreferences = this.getSharedPreferences("Login", MODE_PRIVATE).edit();
+        sharedPreferences.putString("name", currentUser.getName());
+        sharedPreferences.putString("nickName", currentUser.getNickName());
+        sharedPreferences.putString("email", currentUser.getEmail());
+        sharedPreferences.commit();
     }
 
 
@@ -50,6 +90,28 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setMessage("Are you sure want to SignOut and exit?");
+        builder.setCancelable(true);
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton("Yes! Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+
+    }
 
     private boolean loadFragment(Fragment fragment){
         if(fragment != null){

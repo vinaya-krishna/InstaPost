@@ -5,4 +5,19 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="name">Name</string>
+    <string name="nick_name">Nick Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="signin">Sign In</string>
+    <string name="not_registered">Not Registered?\nRegister Here</string>
+    <string name="logout">Sign out</string>
+    <string name="users">Users</string>
+    <string name="hashTags">HashTags</string>
+    <string name="create_new_post">Create New Post</string>
+    <string name="optional_text">Optional Text</string>
+    <string name="HashtagHint">#hashtag</string>
+    <string name="post">Post</string>
+    <string name="add_image">Add Photo</string>
 </resources>

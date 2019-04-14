@@ -45,7 +45,6 @@ public class PostfeedActivity extends AppCompatActivity {
         mPostsView = findViewById(R.id.recycler_view_posts);
         mPostsView.setLayoutManager(new LinearLayoutManager(this));
         mPosts = new ArrayList<>();
-
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Posts");
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -63,10 +62,10 @@ public class PostfeedActivity extends AppCompatActivity {
 
 
                 }
-
-                mAdapter = new PostfeedAdapter(PostfeedActivity.this, mPosts);
-                mPostsView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
                 mProgressImage.setVisibility(View.INVISIBLE);
+                if(mPosts.isEmpty())
+                    showMessage("No Posts Found!");
             }
 
             @Override
@@ -76,5 +75,16 @@ public class PostfeedActivity extends AppCompatActivity {
             }
         });
 
+        initRecyclerView();
+
+    }
+
+    private void initRecyclerView(){
+        mAdapter = new PostfeedAdapter(PostfeedActivity.this, mPosts);
+        mPostsView.setAdapter(mAdapter);
+    }
+
+    private void showMessage(String message){
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
 }

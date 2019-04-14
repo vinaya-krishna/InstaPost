@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -57,6 +58,7 @@ public class SigninActivity extends AppCompatActivity {
             public void onClick(final View v) {
                 signInButton.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
+                password.onEditorAction(EditorInfo.IME_ACTION_DONE);
 
                 String userEmail = email.getText().toString().trim();
                 String userPassword = password.getText().toString().trim();
@@ -91,8 +93,6 @@ public class SigninActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void showMessage(String message){
         Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();

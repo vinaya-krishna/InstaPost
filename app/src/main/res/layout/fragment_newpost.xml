@@ -4,33 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.PostActivity">
+    tools:context=".Activities.HomeActivity">
 
-
-    <Button
-        android:id="@+id/choose_photo_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="Choose Photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toTopOf="@+id/optional_text"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/choose_photo_button" />
+        app:layout_constraintTop_toBottomOf="@+id/camera_button" />
 
     <EditText
         android:id="@+id/optional_text"
@@ -40,7 +30,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:ems="10"
-        android:hint="Optional Text"
+        android:hint="@string/optional_text"
         android:inputType="textNoSuggestions"
         app:layout_constraintBottom_toTopOf="@+id/hash_tag"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,9 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:ems="10"
-        android:hint="#hashtag"
+        android:hint="@string/HashtagHint"
         android:inputType="textNoSuggestions"
         app:layout_constraintBottom_toTopOf="@+id/progress_bar_upload"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/post_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -76,13 +66,38 @@
 
     <Button
         android:id="@+id/post_button"
-        android:layout_width="0dp"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Post"
+        android:text="@string/post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/camera_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/add_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_up_load"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="59dp"
+        android:layout_height="58dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/post_button"
+        app:layout_constraintEnd_toEndOf="@+id/post_button"
+        app:layout_constraintStart_toStartOf="@+id/post_button"
+        app:layout_constraintTop_toTopOf="@+id/post_button" />
+
 </android.support.constraint.ConstraintLayout>

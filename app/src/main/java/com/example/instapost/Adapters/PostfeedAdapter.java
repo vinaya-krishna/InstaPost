@@ -18,12 +18,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class PostfeedAdapter extends RecyclerView.Adapter<PostfeedAdapter.PostfeedHolder> {
-
-
     private Context mContext;
     private ArrayList<Post> mPosts;
-
-
     public PostfeedAdapter( Context context, ArrayList<Post> posts ){
         mContext = context;
         mPosts = posts;
@@ -42,16 +38,11 @@ public class PostfeedAdapter extends RecyclerView.Adapter<PostfeedAdapter.Postfe
         postfeedHolder.optionalText.setText(post.getmOptionalText());
         postfeedHolder.hashTag.setText(post.getmHashTag());
         postfeedHolder.userName.setText(post.getmName());
-
-        System.out.println("***************************");
-        System.out.println(post.getmImageURl());
-
         Picasso.with(mContext).load(post.getmImageURl())
                 .fit()
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_imageload)
                 .centerInside()
                 .into(postfeedHolder.postImage);
-//        postfeedHolder.postImage.setImageURI(Uri.parse(post.getmImageURl()));
     }
 
     @Override

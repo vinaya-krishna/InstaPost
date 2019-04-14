@@ -40,13 +40,9 @@ public class HashtagFragment extends Fragment {
     private DatabaseReference mPostsRef = mRootRef.child("Posts");
     private SelectionViewAdapter selectionViewAdapter;
 
-
     private static final String TAG = "HashtagFragment";
-
     private Set<String> mHashTags = new HashSet<>();
     private ArrayList<String> mListContents = new ArrayList<>();
-
-
 
     @Nullable
     @Override
@@ -71,7 +67,6 @@ public class HashtagFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String key = dataSnapshot.getKey();
-                Log.d(TAG, "onDataChange Called");
                 mListContents.clear();
                 mHashTags.clear();
 
@@ -84,9 +79,10 @@ public class HashtagFragment extends Fragment {
                     }
                     mListContents.addAll(mHashTags);
                     selectionViewAdapter.notifyDataSetChanged();
+                    if(mListContents.isEmpty())
+                        showMessage("No HashTags Found!");
                 }
 
-                System.out.println(mHashTags);
                 mProgressBar.setVisibility(View.INVISIBLE);
                 recyclerView.setVisibility(View.VISIBLE);
             }
@@ -100,7 +96,6 @@ public class HashtagFragment extends Fragment {
     }
 
     private void initRecyclerView(){
-        Log.d(TAG, "initRecyclerView: init called");
 
         selectionViewAdapter = new SelectionViewAdapter(getActivity(), mListContents);
 

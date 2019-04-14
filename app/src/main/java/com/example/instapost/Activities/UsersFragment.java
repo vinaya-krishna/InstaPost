@@ -1,6 +1,6 @@
 package com.example.instapost.Activities;
 
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.example.instapost.Adapters.SelectionViewAdapter;
 import com.example.instapost.Models.User;
 import com.example.instapost.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,13 +33,10 @@ public class UsersFragment extends Fragment {
     private RecyclerView recyclerView;
     private User currentUser;
 
-    private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mRootRef = mDatabase.getReference();
     private DatabaseReference mUsersRef = mRootRef.child("Users");
     private SelectionViewAdapter selectionViewAdapter;
-    private SharedPreferences.Editor sharedPreferences;
-
 
     private ArrayList<String> mUsers = new ArrayList<>();
     private static final String TAG = "UsersFragment";
@@ -63,7 +59,7 @@ public class UsersFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
+
         initRecyclerView();
 
         mUsersRef.addValueEventListener(new ValueEventListener() {
@@ -76,13 +72,11 @@ public class UsersFragment extends Fragment {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         currentUser = child.getValue(User.class);
                         mUsers.add(currentUser.getNickName());
-
-                        if(child.getKey().compareTo(FirebaseAuth.getInstance().getCurrentUser().getUid()) == 0){
-                            saveUser();
-                        }
                     }
 
                     selectionViewAdapter.notifyDataSetChanged();
+                    if(mUsers.isEmpty())
+                        showMessage("No Users Found!");
                 }
 
                 mProgressBar.setVisibility(View.INVISIBLE);
@@ -108,14 +102,6 @@ public class UsersFragment extends Fragment {
 
         recyclerView.setAdapter(selectionViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    }
-
-    private void saveUser(){
-        sharedPreferences = getContext().getSharedPreferences("Login", getActivity().MODE_PRIVATE).edit();
-        sharedPreferences.putString("name", currentUser.getName());
-        sharedPreferences.putString("nickName", currentUser.getNickName());
-        sharedPreferences.putString("email", currentUser.getEmail());
-        sharedPreferences.commit();
     }
 
     private void showMessage(String message){

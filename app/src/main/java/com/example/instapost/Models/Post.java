@@ -26,9 +26,6 @@ public class Post {
     }
 
     public Post(String mOptionalText, String mImageURl, String mHashTag, String mEmail, String mName) {
-
-//        if(mOptionalText.trim().equals(""))
-//            mOptionalText = "";
         this.mOptionalText = mOptionalText;
         this.mImageURl = mImageURl;
         this.mHashTag = mHashTag;
