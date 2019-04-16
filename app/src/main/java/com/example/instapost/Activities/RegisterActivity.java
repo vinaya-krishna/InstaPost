@@ -19,7 +19,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -63,39 +67,68 @@ public class RegisterActivity extends AppCompatActivity {
                     loadingBar.setVisibility(View.INVISIBLE);
                 }
                 else{
-                    mAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if(task.isSuccessful()){
-                                        User user = new User(name, nickName, email);
-                                        FirebaseDatabase.getInstance().getReference("Users")
-                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful()){
-                                                    //go to next Screen
-                                                    regButton.setVisibility(View.VISIBLE);
-                                                    loadingBar.setVisibility(View.INVISIBLE);
 
-                                                    Intent selectionIntent = new Intent(v.getContext(), HomeActivity.class);
-                                                    startActivity(selectionIntent);
-                                                }
-                                            }
-                                        });
-                                    }
-                                    else{
-                                        showMessage("Account Creation Failed "+ task.getException().getMessage());
-                                        regButton.setVisibility(View.VISIBLE);
-                                        loadingBar.setVisibility(View.INVISIBLE);
-                                    }
-                                }
-                            });
+
+                    Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("nickName").equalTo(nickName);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.getChildrenCount()>0){
+                                showMessage("Nickname already exists! Choose a different Nickname");
+                                regButton.setVisibility(View.VISIBLE);
+                                loadingBar.setVisibility(View.INVISIBLE);
+                            }
+                            else{
+                                    User user = new User(name, nickName, email, password);
+                                    createUser(user, v);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            showMessage(databaseError.getMessage());
+                            showMessage("Choose a different Nick Name");
+                            regButton.setVisibility(View.VISIBLE);
+                            loadingBar.setVisibility(View.INVISIBLE);
+                        }
+                    });
+
                 }
             }
         });
 
+    }
+
+    private void createUser(final User user, final View v){
+        mAuth.createUserWithEmailAndPassword(user.email, user.password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        //go to next Screen
+                                        regButton.setVisibility(View.VISIBLE);
+                                        loadingBar.setVisibility(View.INVISIBLE);
+
+                                        Intent selectionIntent = new Intent(v.getContext(), HomeActivity.class);
+                                        startActivity(selectionIntent);
+                                    }
+                                }
+                            });
+                        }
+                        else{
+                            showMessage("Account Creation Failed "+ task.getException().getMessage());
+                            regButton.setVisibility(View.VISIBLE);
+                            loadingBar.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                });
     }
 
 

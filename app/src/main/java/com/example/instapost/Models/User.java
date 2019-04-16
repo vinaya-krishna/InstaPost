@@ -4,6 +4,7 @@ public class User {
     public String name;
     public String nickName;
     public String email;
+    public String password;
 
     public String getName() {
         return name;
@@ -33,9 +34,10 @@ public class User {
 
     }
 
-    public User(String name, String nickName, String email) {
+    public User(String name, String nickName, String email,String password) {
         this.name = name;
         this.nickName = nickName;
         this.email = email;
+        this.password = password;
     }
 }
